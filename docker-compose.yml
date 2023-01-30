@@ -1,0 +1,38 @@
+version: "3.1"
+services:
+  jenkins: 
+    image: jenkins/jenkins:lts
+    container_name: jenkins_container
+    ports: 
+      - "8085:8080"
+      - "5000:5000"
+    volumes:
+      - jenkins_vol:/var/jenkins_home
+    depends_on:
+      - postgresql
+
+  tomcat:
+    image: tomcat:9.0
+    container_name: tomcat_container
+    ports:
+      - "9090:8080"
+    volumes:
+      - tomcat_vol:/usr/local/tomcat
+    depends_on:    
+      - jenkins
+
+  postgresql:
+    image: postgres
+    container_name: postgres_container
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_PASSWORD:1234
+    volumes:
+      - postgres_vol:/var/lib/postgresql/data
+volumes:
+  jenkins_vol:
+  tomcat_vol:
+  postgres_vol:
+
+
